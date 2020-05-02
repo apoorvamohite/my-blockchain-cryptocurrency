@@ -8,6 +8,8 @@ const Wallet = require('./wallet');
 const TransactionMiner = require('./app/transaction-miner');
 const PubSub = require('./app/pubsub');
 
+const NUM_BLOCKS_PER_PAGE = 5;
+
 const app = express();
 const blockchain = new Blockchain();
 const transactionPool = new TransactionPool();
@@ -23,6 +25,22 @@ app.use(express.static(path.join(__dirname, 'client/dist')));
 
 app.get('/api/blocks', (req, res)=>{
     res.json(blockchain.chain);
+});
+
+app.get('/api/blocks/length', (req, res)=>{
+    res.json(blockchain.chain.length);
+});
+
+app.get('/api/blocks/:id', (req, res) => {
+    const { id } = req.params;
+    const { length } = blockchain.chain;
+    const blocksReversed = blockchain.chain.slice().reverse();
+    let startIndex = (id-1)*NUM_BLOCKS_PER_PAGE;
+    let endIndex = id * NUM_BLOCKS_PER_PAGE;
+    startIndex = startIndex < length ? startIndex : length;
+    endIndex = endIndex < length ? endIndex : length;
+
+    res.json(blocksReversed.slice(startIndex, endIndex));
 });
 
 app.post('/api/mine', (req, res)=>{
@@ -65,6 +83,17 @@ app.get('/api/wallet-info', (req, res) =>{
         address,
         balance: Wallet.calculateBalance({ chain: blockchain.chain, address})
     });
+});
+
+app.get('/api/known-addresses', (req, res) =>{
+    const addressMap = {};
+    for(let block of blockchain.chain){
+        for(let transaction of block.data){
+            const recipient = Object.keys(transaction.outputMap);
+            recipient.forEach(recipient => addressMap[recipient] = recipient);
+        }
+    }
+    res.json(Object.keys(addressMap));
 });
 
 app.get('*', (req, res)=>{

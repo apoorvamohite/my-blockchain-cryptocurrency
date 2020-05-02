@@ -16,7 +16,6 @@ class App extends Component{
         return(
             <div className="App">
                 <img className="logo" src={logo}></img>
-                <div>Welcome to my bchain...</div>
                 <div>
                     <Link to='./blocks'>Blocks</Link>
                     <br/>
