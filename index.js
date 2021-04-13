@@ -15,7 +15,7 @@ const REDIS_URL = isDevelopment ?
     'redis://h:p01561690ba1f8df2d8119c80d69ea684432444988787d7ddda921373c613e51d@ec2-35-169-115-180.compute-1.amazonaws.com:27549'
 
 const DEFAULT_PORT = 3000;
-const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
+const ROOT_NODE_ADDRESS = isDevelopment? `http://localhost:${DEFAULT_PORT}`: 'https://arcane-journey-01904.herokuapp.com';
 
 
 const NUM_BLOCKS_PER_PAGE = 5;
