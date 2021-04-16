@@ -12,7 +12,7 @@ const isDevelopment = process.env.ENV === 'development';
 
 const REDIS_URL = isDevelopment ?
     'redis://127.0.0.1:6379' :
-    'redis://h:p01561690ba1f8df2d8119c80d69ea684432444988787d7ddda921373c613e51d@ec2-35-169-115-180.compute-1.amazonaws.com:27549'
+    process.env.REDIS_URL
 
 const DEFAULT_PORT = 3000;
 const ROOT_NODE_ADDRESS = isDevelopment? `http://localhost:${DEFAULT_PORT}`: 'https://arcane-journey-01904.herokuapp.com';
